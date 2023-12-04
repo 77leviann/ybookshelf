@@ -1,0 +1,122 @@
+:root {
+    --primary: #776b5d;
+    --secondary: #b0a695;
+    --accent: #ebe3d5;
+    --background: #f3eeea;
+    --text: #ffffff;
+    --black: #000000;
+}
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background);
+    font-family: "Poppins", sans-serif;
+}
+
+header {
+    padding: 1rem 3rem;
+    background-color: var(--secondary);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.app-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-bar img {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 1rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.input-output {
+    display: flex;
+    margin: 2rem;
+    gap: 3rem;
+}
+
+.input, .output, .book-shelf {
+    flex: 1;
+    padding: 2rem;
+    border: 0.1px solid var(--black);
+    border-radius: 0.7rem;
+    justify-content: space-between;
+}
+
+.input-book {
+    display: flex;
+    flex-direction: column;
+}
+
+form div, #submit-button {
+    margin-top: 1rem;
+}
+
+#input-book__title, #input-book__author, #input-book__year {
+    padding: 2rem;
+    border: 0.1px solid var(--black);
+    padding: 10px;
+    border-radius: 0.4rem;
+    justify-content: space-between;
+}
+
+.input h2 {
+    text-align: center;
+}
+
+#submit-button,
+#search-book_tittle,
+#search-button {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#submit-button, #search-button {
+    background-color: var(--primary);
+    color: white;
+    display: block;
+    width: 100%;
+    border: 0;
+}
+
+#search-book {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#search-book_tittle {
+    flex: 7;
+}
+
+#search-button {
+    flex: 2;
+}
+
+
+.book {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 660px) {
+    .input-output {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #search-book, .book {
+        flex-direction: column;
+    }
+}
