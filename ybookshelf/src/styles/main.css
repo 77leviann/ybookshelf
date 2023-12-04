@@ -5,6 +5,8 @@
     --background: #f3eeea;
     --text: #ffffff;
     --black: #000000;
+    --red: #ff0000;
+    --blue: #0000ff;
 }
 
 
@@ -19,7 +21,7 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
-header {
+header, footer {
     padding: 1rem 3rem;
     background-color: var(--secondary);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -45,12 +47,42 @@ header {
     gap: 3rem;
 }
 
-.input, .output, .book-shelf {
-    flex: 1;
-    padding: 2rem;
+.input,
+.output,
+.book-shelf,
+#input-book__title,
+#input-book__author,
+#input-book__year,
+.book-item {
+    min-width: 0;
     border: 0.1px solid var(--black);
-    border-radius: 0.7rem;
     justify-content: space-between;
+}
+
+
+.input,
+.output,
+.book-shelf {
+    border-radius: 0.7rem;
+    padding: 2rem;
+}
+
+.input {
+    flex: 0 0 300px;
+    padding: 2rem;
+    height: auto;
+}
+
+.output,
+.book-shelf {
+    flex: 1;
+}
+
+#input-book__title,
+#input-book__author,
+#input-book__year {
+    border-radius: 0.3rem;
+    padding: 0.5rem;
 }
 
 .input-book {
@@ -58,16 +90,9 @@ header {
     flex-direction: column;
 }
 
-form div, #submit-button {
+form div,
+#submit-button {
     margin-top: 1rem;
-}
-
-#input-book__title, #input-book__author, #input-book__year {
-    padding: 2rem;
-    border: 0.1px solid var(--black);
-    padding: 10px;
-    border-radius: 0.4rem;
-    justify-content: space-between;
 }
 
 .input h2 {
@@ -76,15 +101,18 @@ form div, #submit-button {
 
 #submit-button,
 #search-book_tittle,
-#search-button {
+#search-button,
+.book-item button {
     padding: 8px;
     cursor: pointer;
     border-radius: 5px;
 }
 
-#submit-button, #search-button {
+#submit-button,
+#search-button,
+.book-item button {
     background-color: var(--primary);
-    color: white;
+    color: var(--text);
     display: block;
     width: 100%;
     border: 0;
@@ -103,11 +131,58 @@ form div, #submit-button {
     flex: 2;
 }
 
-
 .book {
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
+}
+
+.book-shelf h3 {
+    text-align: center;
+}
+
+.book-item {
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 0.4rem;
+    background-color: var(--accent);
+}
+
+.book-item button {
+    margin-top: 0.2rem;
+}
+
+#button-incomplete:hover,
+#button-complete:hover {
+    background-color: var(--blue);
+}
+
+
+.delete-button:hover {
+    background-color: var(--red);
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--text);
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+
+footer {
+    text-align: center;
+
+}
+
+@media screen and (max-width: 1024px) {
+    .book {
+        flex-direction: column;
+    }
 }
 
 @media screen and (max-width: 660px) {

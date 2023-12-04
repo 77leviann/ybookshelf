@@ -37,7 +37,7 @@
                     </div>
                     <div class="input-checkbox">
                         <label for="input-checkbox__complete">Selesai dibaca</label>
-                        <input id="input-checkbox__complete" type="checkbox" required/>
+                        <input id="input-checkbox__complete" type="checkbox"/>
                     </div>
                     <button id="submit-button" type="submit">Tambah Buku</button>
                 </form>
@@ -46,22 +46,28 @@
                 <div class="search">
                     <form id="search-book">
                         <input id="search-book_tittle" type="text" placeholder="Cari Buku" />
-                        <button id="search-button" type="button">Cari</button>
+                        <button id="search-button" type="submit">Cari</button>
                     </form>
                 </div>
                 <div class="book">
                     <div class="book-shelf">
-                        <h2>Belum Selesai Dibaca</h2>
+                        <h3>Belum Selesai Dibaca</h3>
                         <div id="book-incomplete"></div>
                     </div> 
                     <div class="book-shelf">
-                        <h2>Selesai Dibaca</h2>
+                        <h3>Selesai Dibaca</h3>
                         <div id="book-complete"></div>
+                    </div>
+                    <div id="no-results-popup" class="popup" style="display: none;">
+                        <p>BUKU TIDAK DITEMUKAN</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+    <footer>
+        <h4>&copy; LEVIAN DANDRA</h4>
+    </footer>
     <script src="./src/script/main.js"></script>
   </body>
 </html>
