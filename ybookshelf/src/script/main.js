@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const bookshelf = {
         books: [],
+
         addBook: function (title, author, year, isComplete) {
             const newBook = {
                 id: +new Date(),
@@ -14,18 +15,87 @@ document.addEventListener('DOMContentLoaded', function () {
             this.renderBooks();
             this.saveToLocalStorage();
         },
+
+        editBook: function (id) {
+            const bookToEdit = this.books.find((book) => book.id === id);
+          
+            if (bookToEdit) {
+                const editFormContainer = document.getElementById(`edit-form-${id}`);
+        
+                editFormContainer.innerHTML = '';
+        
+                const editForm = document.createElement('form');
+                editForm.classList.add('edit-form');
+        
+                const editTitleInput = this.createInput('text', 'Enter new title:', bookToEdit.title, true);
+                const editAuthorInput = this.createInput('text', 'Enter new author:', bookToEdit.author, true);
+                const editYearInput = this.createInput('date', 'Enter new year:', bookToEdit.year);
+        
+                const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('edit-container');
+        
+                const saveEditButton = this.createButton('button', 'Save', function () {
+                    bookshelf.saveEdit(id, editTitleInput.value, editAuthorInput.value, editYearInput.value);
+                }, 'save-button');
+        
+                const cancelEditButton = this.createButton('button', 'Cancel', function () {
+                    bookshelf.cancelEdit(id);
+                }, 'cancel-button');
+        
+                buttonContainer.appendChild(saveEditButton);
+                buttonContainer.appendChild(cancelEditButton);
+        
+                editForm.appendChild(editTitleInput);
+                editForm.appendChild(editAuthorInput);
+                editForm.appendChild(editYearInput);
+                editForm.appendChild(buttonContainer);
+                editFormContainer.appendChild(editForm);
+            }
+        },
+        
+    
+        saveEdit: function (id, newTitle, newAuthor, newYear) {
+            const editedBook = this.books.find((book) => book.id === id);
+        
+            if (editedBook) {
+                editedBook.title = newTitle;
+                editedBook.author = newAuthor;
+                editedBook.year = newYear;
+        
+                this.renderBooks();
+                this.saveToLocalStorage();
+                this.showPopup('Buku berhasil diperbarui!');
+            }
+        
+            this.cancelEdit(id);
+        },
+
+        cancelEdit: function (id) {
+            const editFormContainer = document.getElementById(`edit-form-${id}`);
+        
+            if (editFormContainer) {
+                editFormContainer.innerHTML = '';
+            }
+        },
+
         moveBook: function (id, isComplete) {
             const index = this.books.findIndex((book) => book.id === id);
             this.books[index].isComplete = isComplete;
             this.renderBooks();
             this.saveToLocalStorage();
+
+            const action = isComplete ? 'Buku selesai dibaca!' : 'Buku belum selesai dibaca!';
+            this.showPopup(action);
         },
+
         deleteBook: function (id) {
             const index = this.books.findIndex((book) => book.id === id);
             this.books.splice(index, 1);
             this.renderBooks();
             this.saveToLocalStorage();
+            this.showPopup('Buku dihapus!');
         },
+
         renderBooks: function () {
             const incompleteShelf = document.getElementById('book-incomplete');
             const completeShelf = document.getElementById('book-complete');
@@ -46,26 +116,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 const year = document.createElement('p');
                 year.textContent = `Tahun: ${book.year}`;
 
-                const actionButton = document.createElement('button');
-                actionButton.textContent = book.isComplete ? 'Belum Selesai Dibaca' : 'Selesai Dibaca';
-                actionButton.id = book.isComplete ? 'button-incomplete' : 'button-complete';
-                actionButton.addEventListener('click', function () {
-                    const isComplete = !book.isComplete;
+                const isCompleteCheckbox = document.createElement('input');
+                isCompleteCheckbox.type = 'checkbox';
+                isCompleteCheckbox.checked = book.isComplete;
+                isCompleteCheckbox.classList.add('complete-checkbox');
+                isCompleteCheckbox.addEventListener('change', function () {
+                    const isComplete = isCompleteCheckbox.checked;
                     bookshelf.moveBook(book.id, isComplete);
                 });
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Hapus';
-                deleteButton.classList.add('delete-button');
-                deleteButton.addEventListener('click', function () {
+                const editButton = this.createButton('button', 'Edit', function () {
+                    bookshelf.editBook(book.id);
+                });
+
+                const deleteButton = this.createButton('button', 'Hapus', function () {
                     bookshelf.deleteBook(book.id);
                 });
+
+                const editFormContainer = document.createElement('div');
+                editFormContainer.id = `edit-form-${book.id}`;
 
                 bookContainer.appendChild(title);
                 bookContainer.appendChild(author);
                 bookContainer.appendChild(year);
-                bookContainer.appendChild(actionButton);
+                bookContainer.appendChild(isCompleteCheckbox);
+                bookContainer.appendChild(editButton);
                 bookContainer.appendChild(deleteButton);
+                bookContainer.appendChild(editFormContainer);
 
                 if (book.isComplete) {
                     completeShelf.appendChild(bookContainer);
@@ -74,9 +151,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         },
+
+        createInput: function (type, placeholder, value, required = false) {
+            const input = document.createElement('input');
+            input.type = type;
+            input.placeholder = placeholder;
+            input.value = value;
+            input.required = required;
+            return input;
+        },
+
+        createButton: function (type, text, clickHandler, className) {
+            const button = document.createElement('button');
+            button.type = type;
+            button.textContent = text;
+            button.addEventListener('click', clickHandler);
+
+            if (className) {
+                button.classList.add(className);
+            }
+
+            return button;
+        },
+
+        
+        showPopup: function (message) {
+            const popup = document.getElementById('popup');
+            popup.textContent = message;
+            popup.style.display = 'block';
+            setTimeout(function () {
+                popup.style.display = 'none';
+            }, 1000);
+        },
+
         saveToLocalStorage: function () {
             localStorage.setItem('bookshelf', JSON.stringify(this.books));
         },
+
         loadFromLocalStorage: function () {
             const storedBooks = localStorage.getItem('bookshelf');
             if (storedBooks) {
@@ -84,56 +195,49 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.renderBooks();
             }
         },
+
         renderFilteredBooks: function (filteredBooks) {
             const incompleteShelf = document.getElementById('book-incomplete');
             const completeShelf = document.getElementById('book-complete');
-            const noResultsPopup = document.getElementById('no-results-popup');
-
+            
             incompleteShelf.innerHTML = '';
             completeShelf.innerHTML = '';
-
+        
             if (filteredBooks.length === 0) {
-                noResultsPopup.style.display = 'block';
-                setTimeout(function () {
-                    noResultsPopup.style.display = 'none';
-                }, 1000);
+                this.showPopup('Tidak ada hasil yang ditemukan!');
             } else {
-                noResultsPopup.style.display = 'none';
-
                 filteredBooks.forEach((book) => {
                     const bookContainer = document.createElement('div');
                     bookContainer.classList.add('book-item');
-
+        
                     const title = document.createElement('p');
                     title.textContent = book.title;
-
+        
                     const author = document.createElement('p');
                     author.textContent = `Penulis: ${book.author}`;
-
+        
                     const year = document.createElement('p');
                     year.textContent = `Tahun: ${book.year}`;
-
-                    const actionButton = document.createElement('button');
-                    actionButton.textContent = book.isComplete ? 'Belum Selesai Dibaca' : 'Selesai Dibaca';
-                    actionButton.id = book.isComplete ? 'button-incomplete' : 'button-complete';
-                    actionButton.addEventListener('click', function () {
+        
+                    const actionButton = this.createButton('button', book.isComplete ? 'Belum Selesai Dibaca' : 'Selesai Dibaca', function () {
                         const isComplete = !book.isComplete;
                         bookshelf.moveBook(book.id, isComplete);
                     });
-
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Hapus';
-                    deleteButton.classList.add('delete-button');
-                    deleteButton.addEventListener('click', function () {
+        
+                    const deleteButton = this.createButton('button', 'Hapus', function () {
                         bookshelf.deleteBook(book.id);
                     });
-
+        
+                    const editFormContainer = document.createElement('div');
+                    editFormContainer.id = `edit-form-${book.id}`;
+        
                     bookContainer.appendChild(title);
                     bookContainer.appendChild(author);
                     bookContainer.appendChild(year);
                     bookContainer.appendChild(actionButton);
                     bookContainer.appendChild(deleteButton);
-
+                    bookContainer.appendChild(editFormContainer);
+        
                     if (book.isComplete) {
                         completeShelf.appendChild(bookContainer);
                     } else {
@@ -142,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         },
+        
     };
 
     const submitForm = document.querySelector('form');
@@ -155,9 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         bookshelf.addBook(title, author, year, isComplete);
 
-        // Reset form
         submitForm.reset();
-    });
+    }.bind(bookshelf));
 
     const searchForm = document.getElementById('search-book');
     searchForm.addEventListener('submit', function (event) {
@@ -167,8 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const filteredBooks = bookshelf.books.filter(book => book.title.toLowerCase().includes(searchInput));
 
         bookshelf.renderFilteredBooks(filteredBooks);
-    });
+    }.bind(bookshelf))
 
-    // Load books from localStorage when the page loads
     bookshelf.loadFromLocalStorage();
 });

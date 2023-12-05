@@ -7,6 +7,7 @@
     --black: #000000;
     --red: #ff0000;
     --blue: #0000ff;
+    --green: #4caf50;
 }
 
 
@@ -52,8 +53,7 @@ header, footer {
 .book-shelf,
 #input-book__title,
 #input-book__author,
-#input-book__year,
-.book-item {
+#input-book__year {
     min-width: 0;
     border: 0.1px solid var(--black);
     justify-content: space-between;
@@ -80,12 +80,14 @@ header, footer {
 
 #input-book__title,
 #input-book__author,
-#input-book__year {
+#input-book__year,
+.edit-form {
     border-radius: 0.3rem;
     padding: 0.5rem;
 }
 
-.input-book {
+.input-book,
+.edit-form {
     display: flex;
     flex-direction: column;
 }
@@ -141,42 +143,63 @@ form div,
     text-align: center;
 }
 
-.book-item {
+.book-item,
+.edit-form {
     padding: 1rem;
     margin: 1rem;
     border-radius: 0.4rem;
     background-color: var(--accent);
+    position: relative;
+
 }
 
 .book-item button {
     margin-top: 0.2rem;
 }
 
-#button-incomplete:hover,
-#button-complete:hover {
-    background-color: var(--blue);
-}
-
-
-.delete-button:hover {
+.cancel-button:hover {
     background-color: var(--red);
 }
 
-.popup {
+#popup {
+    display: none;
     position: fixed;
-    top: 50%;
+    bottom: 50px;
     left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--text);
-    padding: 20px;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateX(-50%);
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
     z-index: 999;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.complete-checkbox {
+    position: absolute;
+    top: 1rem; 
+    right: 1rem; 
+}
+
+.edit-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.save-button:hover {
+    background-color: var(--green);
+}
+
+.edit-form {
+    gap: 0.5rem;
+    align-items: center;
 }
 
 footer {
     text-align: center;
-
 }
 
 @media screen and (max-width: 1024px) {
