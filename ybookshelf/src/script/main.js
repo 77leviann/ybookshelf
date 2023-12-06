@@ -3,6 +3,13 @@ document.addEventListener('DOMContentLoaded', function () {
         books: [],
 
         addBook: function (title, author, year, isComplete) {
+            const existingBook = this.books.find(book => book.title.toLowerCase() === title.toLowerCase());
+        
+            if (existingBook) {
+                this.showPopup('Buku dengan judul yang sama sudah ada!');
+                return;
+            }
+        
             const newBook = {
                 id: +new Date(),
                 title: title,
@@ -10,12 +17,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 year: year,
                 isComplete: isComplete,
             };
-
+        
             this.books.push(newBook);
             this.renderBooks();
             this.saveToLocalStorage();
-        },
 
+            this.showPopup('Buku berhasil ditambahkan!');
+        },
+        
         editBook: function (id) {
             const bookToEdit = this.books.find((book) => book.id === id);
           
